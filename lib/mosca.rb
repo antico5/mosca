@@ -1,4 +1,5 @@
 require 'mqtt'
+require 'json'
 
 class Mosca
   @@default_broker = "test.mosquitto.org"
@@ -66,15 +67,16 @@ class Mosca
   def parse_response response
     if valid_json? response
       response = JSON.parse response
-      response.symbolize_keys! if response.is_a? Hash
     end
     response
   end
 
   def valid_json? json_
-    JSON.parse(json_)
-    return true
-  rescue JSON::ParserError
-    return false
+    begin
+      JSON.parse(json_)
+      return true
+    rescue
+      return false
+    end
   end
 end
