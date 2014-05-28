@@ -22,6 +22,7 @@ class Mosca
     connection do |c|
       topic = params[:topic] || @topic_out
       debug "[start publish] " + timestamp
+      c.subscribe(topic_base + topic_in) if params[:response]
       c.publish(topic_base + topic,json)
       debug "[end publish] " + timestamp
       if params[:response]
