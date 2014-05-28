@@ -4,14 +4,16 @@ require 'json'
 class Mosca
   @@default_broker = "test.mosquitto.org"
   @@default_timeout = 5
+  @@debug = false
 
-  attr_accessor :user, :pass, :topic_in, :topic_out, :broker
+  attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base
 
   def initialize params = {}
     @user = params[:user]
     @pass = params[:pass]
     @topic_in = params[:topic_in]
     @topic_out = params[:topic_out]
+    @topic_base = params[:topic_base] || ""
     @broker = params[:broker] ||  @@default_broker
     @client = params[:client] || MQTT::Client
   end
@@ -19,29 +21,37 @@ class Mosca
   def publish json, params = {}
     connection do |c|
       topic = params[:topic] || @topic_out
-      c.publish(topic,json)
+      debug "[start publish] " + timestamp
+      c.publish(topic_base + topic,json)
+      debug "[end publish] " + timestamp
       if params[:response]
-        return get(params)
+        return get(params.merge({connection: c}))
       end
     end
   end
 
   def get params = {}
     response = {}
-    connection do |c|
+    connection(params) do |c|
       topic = params[:topic] || @topic_in
       timeout = params[:timeout] || @@default_timeout
       begin
         Timeout.timeout(timeout) do
-          c.get(topic) do |topic, message|
+          debug "[start get] " + timestamp
+          c.get(topic_base + topic) do |topic, message|
             response = parse_response message
             break
           end
+          debug "[end get] " + timestamp
         end
       rescue
       end
     end
     response
+  end
+
+  def get_with_connection
+
   end
 
   def self.default_broker= param
@@ -52,15 +62,23 @@ class Mosca
     @@default_timeout = param
   end
 
+  def self.debug= param
+    @@debug = param
+  end
+
   private
 
   def opts
     {remote_host: @broker, username: @user, password: @pass}
   end
 
-  def connection
-    @client.connect(opts) do |c|
-      yield c
+  def connection params = {}
+    if params[:connection]
+      yield params[:connection]
+    else
+      @client.connect(opts) do |c|
+        yield c
+      end
     end
   end
 
@@ -78,5 +96,13 @@ class Mosca
     rescue
       return false
     end
+  end
+
+  def debug message
+    puts message if @@debug
+  end
+
+  def timestamp
+    Time.new.to_f.to_s
   end
 end
