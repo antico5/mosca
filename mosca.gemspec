@@ -11,4 +11,7 @@ Gem::Specification.new do |s|
   s.files       = ["lib/mosca.rb", "lib/command_builder.rb"]
   s.homepage    = 'http://github.com/antico5/mosca'
   s.license       = 'MIT'
+  s.add_dependency 'mqtt', '~> 0.2.0'
+  s.add_dependency 'json', '~> 1.8.1'
+
 end
