@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'mosca'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.date        = '2014-05-22'
   s.summary     = "MQTT messaging made easy"
   s.description = "A simple client for mqtt communication"
