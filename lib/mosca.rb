@@ -6,7 +6,7 @@ class Mosca
   @@default_timeout = 5
   @@debug = false
 
-  attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base
+  attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base, :client
 
   def initialize params = {}
     @user = params[:user]
@@ -20,7 +20,7 @@ class Mosca
 
   def publish json, params = {}
     connection do |c|
-      topic = params[:topic] || @topic_out
+      topic = params[:topic_out] || @topic_out
       debug "[start publish] " + timestamp
       c.subscribe(topic_base + topic_in) if params[:response]
       c.publish(topic_base + topic,json)
@@ -34,7 +34,7 @@ class Mosca
   def get params = {}
     response = {}
     connection(params) do |c|
-      topic = params[:topic] || @topic_in
+      topic = params[:topic_in] || @topic_in
       timeout = params[:timeout] || @@default_timeout
       begin
         Timeout.timeout(timeout) do
@@ -49,10 +49,6 @@ class Mosca
       end
     end
     response
-  end
-
-  def get_with_connection
-
   end
 
   def self.default_broker= param
