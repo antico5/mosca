@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/antico5/mosca.png)](https://codeclimate.com/github/antico5/mosca)
+
 # Mosca
 
 A simple client for mqtt communication
