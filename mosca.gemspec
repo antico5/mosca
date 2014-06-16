@@ -1,17 +1,24 @@
 # coding: utf-8
 
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+require 'mosca/version'
+
 Gem::Specification.new do |s|
   s.name        = 'mosca'
-  s.version     = '0.0.2'
-  s.date        = '2014-05-22'
+  s.version     = Mosca::VERSION
   s.summary     = "MQTT messaging made easy"
   s.description = "A simple client for mqtt communication"
   s.authors     = ["Armando Andini"]
   s.email       = 'armando.andini@hotmail.com'
-  s.files       = ["lib/mosca.rb", "lib/command_builder.rb"]
+  s.license     = 'MIT'
   s.homepage    = 'http://github.com/antico5/mosca'
-  s.license       = 'MIT'
+
+  s.files         = `git ls-files`.split($/)
+  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
+  s.require_paths = ["lib"]
+
   s.add_dependency 'mqtt', '~> 0.2.0'
   s.add_dependency 'json', '~> 1.8.1'
-
 end
