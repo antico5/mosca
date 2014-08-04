@@ -1,4 +1,4 @@
-[![Code Climate](https://codeclimate.com/github/antico5/mosca.png)](https://codeclimate.com/github/antico5/mosca)
+[![Code Climate](https://codeclimate.com/github/ionia-corporation/mosca.png)](https://codeclimate.com/github/ionia-corporation/mosca)
 
 # Mosca
 
