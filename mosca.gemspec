@@ -21,4 +21,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'mqtt', '~> 0.2.0'
   s.add_dependency 'json', '~> 1.8.1'
+
+  s.add_development_dependency 'bundler'
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'pry'
 end
