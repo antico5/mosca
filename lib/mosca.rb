@@ -51,30 +51,21 @@ class Mosca
 
   private
 
-  def opts
-    {remote_host: @broker, username: @user, password: @pass}
-  end
     def default
       { topic_base: "",
         broker: @@default_broker,
         client: MQTT::Client }
     end
 
-  def connection params = {}
-    if params[:connection]
-      yield params[:connection]
-    else
-      @client.connect(opts) do |c|
-        yield c
-      end
     def attributes
       [:user, :pass, :topic_in, :topic_out, :topic_base, :broker, :client]
     end
-  end
 
   def parse_response response
     if valid_json? response
       response = JSON.parse response
+    def opts
+      {remote_host: @broker, username: @user, password: @pass}
     end
     response
   end
@@ -85,11 +76,18 @@ class Mosca
       return true
     rescue
       return false
+    def connection params = {}
+      if params[:connection]
+        yield params[:connection]
+      else
+        @client.connect(opts) do |c|
+          yield c
+        end
+      end
     end
-  end
 
 
-  def timestamp
-    Time.new.to_f.to_s
-  end
+    def timestamp
+      Time.new.to_f.to_s
+    end
 end
