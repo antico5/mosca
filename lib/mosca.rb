@@ -86,7 +86,4 @@ class Mosca
         response
     end
 
-    def timestamp
-      Time.new.to_f.to_s
-    end
 end
