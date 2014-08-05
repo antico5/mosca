@@ -61,7 +61,7 @@ class Mosca
       [:user, :pass, :topic_in, :topic_out, :topic_base, :broker, :client]
     end
 
-    def opts
+    def client_options
       {remote_host: @broker, username: @user, password: @pass}
     end
 
@@ -69,7 +69,7 @@ class Mosca
       if params[:connection]
         yield params[:connection]
       else
-        @client.connect(opts) do |c|
+        @client.connect(client_options) do |c|
           yield c
         end
       end
