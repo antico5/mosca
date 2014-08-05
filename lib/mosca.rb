@@ -19,9 +19,7 @@ class Mosca
       topic = params[:topic_out] || @topic_out
       c.subscribe(topic_base + topic_in) if params[:response]
       c.publish(topic_base + topic,json)
-      if params[:response]
-        return get(params.merge({connection: c}))
-      end
+      get(params.merge({connection: c})) if params[:response]
     end
   end
 
