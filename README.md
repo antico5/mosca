@@ -1,4 +1,9 @@
+[![Version     ](https://img.shields.io/gem/v/mosca.svg)](https://rubygems.org/gems/mosca)
+[![Dependencies](https://img.shields.io/gemnasiumionia-corporation/mosca.svg)](https://gemnasium.com/ionia-corporation/mosca)
 [![Code Climate](https://codeclimate.com/github/ionia-corporation/mosca.png)](https://codeclimate.com/github/ionia-corporation/mosca)
+[![Build Status](https://img.shields.io/travis/ionia-corporation/mosca/master.svg)](https://travis-ci.org/ionia-corporation/mosca)
+[![Coverage    ](https://img.shields.io/codeclimate/coverage/github/ionia-corporation/mosca.svg)](https://codeclimate.com/github/ionia-corporation/mosca)
+
 
 # Mosca
 
