@@ -4,7 +4,6 @@ require 'json'
 class Mosca
   @@default_broker = "test.mosquitto.org"
   @@default_timeout = 5
-  @@debug = false
 
   attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base, :client
 
@@ -18,10 +17,8 @@ class Mosca
   def publish json, params = {}
     connection do |c|
       topic = params[:topic_out] || @topic_out
-      debug "[start publish] " + timestamp
       c.subscribe(topic_base + topic_in) if params[:response]
       c.publish(topic_base + topic,json)
-      debug "[end publish] " + timestamp
       if params[:response]
         return get(params.merge({connection: c}))
       end
@@ -35,12 +32,10 @@ class Mosca
       timeout = params[:timeout] || @@default_timeout
       begin
         Timeout.timeout(timeout) do
-          debug "[start get] " + timestamp
           c.get(topic_base + topic) do |topic, message|
             response = parse_response message
             break
           end
-          debug "[end get] " + timestamp
         end
       rescue
       end
@@ -54,10 +49,6 @@ class Mosca
 
   def self.default_timeout= param
     @@default_timeout = param
-  end
-
-  def self.debug= param
-    @@debug = param
   end
 
   private
@@ -99,9 +90,6 @@ class Mosca
     end
   end
 
-  def debug message
-    puts message if @@debug
-  end
 
   def timestamp
     Time.new.to_f.to_s
