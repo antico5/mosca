@@ -16,10 +16,11 @@ class Mosca
 
   def publish json, params = {}
     connection do |c|
-      topic = params[:topic_out] || @topic_out
-      c.subscribe(topic_base + topic_in) if params[:response]
-      c.publish(topic_base + topic,json)
-      get(params.merge({connection: c})) if params[:response]
+      topic_out = params[:topic_out] || @topic_out
+      topic_in = params[:topic_in] || @topic_in
+      c.subscribe full_topic(topic_in) if params[:response]
+      c.publish full_topic(topic_out), json
+      get params.merge({connection: c}) if params[:response]
     end
   end
 
@@ -47,6 +48,10 @@ class Mosca
 
   def self.default_timeout= param
     @@default_timeout = param
+  end
+
+  def full_topic topic_name
+    topic_base + topic_name
   end
 
   private
