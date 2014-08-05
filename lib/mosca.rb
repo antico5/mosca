@@ -61,21 +61,10 @@ class Mosca
       [:user, :pass, :topic_in, :topic_out, :topic_base, :broker, :client]
     end
 
-  def parse_response response
-    if valid_json? response
-      response = JSON.parse response
     def opts
       {remote_host: @broker, username: @user, password: @pass}
     end
-    response
-  end
 
-  def valid_json? json_
-    begin
-      JSON.parse(json_)
-      return true
-    rescue
-      return false
     def connection params = {}
       if params[:connection]
         yield params[:connection]
@@ -86,6 +75,11 @@ class Mosca
       end
     end
 
+    def parse_response response
+      JSON.parse response
+      rescue JSON::ParserError
+        response
+    end
 
     def timestamp
       Time.new.to_f.to_s
