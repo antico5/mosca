@@ -6,7 +6,7 @@ describe Mosca do
 
   before do
     @client_double = ClientDouble.new
-    @mosca = Mosca.new topic_out: OUT, topic_in: IN, client: @client_double
+    @mosca = Mosca::Client.new topic_out: OUT, topic_in: IN, client: @client_double
     @test_message = "something"
   end
 
