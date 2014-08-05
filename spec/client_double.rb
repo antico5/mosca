@@ -3,7 +3,7 @@ class ClientDouble
     yield self
   end
 
-  def publish topic, payload
+  def method_missing *args
 
   end
 
