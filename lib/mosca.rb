@@ -8,14 +8,11 @@ class Mosca
 
   attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base, :client
 
-  def initialize params = {}
-    @user = params[:user]
-    @pass = params[:pass]
-    @topic_in = params[:topic_in]
-    @topic_out = params[:topic_out]
-    @topic_base = params[:topic_base] || ""
-    @broker = params[:broker] ||  @@default_broker
-    @client = params[:client] || MQTT::Client
+  def initialize args = {}
+    options = default.merge(args)
+    attributes.each do |attribute|
+      send "#{attribute}=".to_sym, options[attribute]
+    end
   end
 
   def publish json, params = {}
@@ -68,6 +65,11 @@ class Mosca
   def opts
     {remote_host: @broker, username: @user, password: @pass}
   end
+    def default
+      { topic_base: "",
+        broker: @@default_broker,
+        client: MQTT::Client }
+    end
 
   def connection params = {}
     if params[:connection]
@@ -76,6 +78,8 @@ class Mosca
       @client.connect(opts) do |c|
         yield c
       end
+    def attributes
+      [:user, :pass, :topic_in, :topic_out, :topic_base, :broker, :client]
     end
   end
 
