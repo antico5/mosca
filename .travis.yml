@@ -7,3 +7,5 @@ matrix:
   allow_failures:
     - rvm: rbx-2
   fast_finish: true
+env:
+  - CODECLIMATE_REPO_TOKEN=188526a5386ffb1697df439556a65c1f1ab2f7889da7452c04220432549248eb 
