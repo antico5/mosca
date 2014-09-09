@@ -73,6 +73,9 @@ describe Mosca do
       expect(mosca.get topic_in: "json_array_in_topic").to be_a Array
     end
 
+    it "gets plain text if the message aint JSON" do
+      expect(mosca.get topic_in: "plain_in_topic").to be_a String
+    end
   end
 
   describe "formatting the topic names" do
