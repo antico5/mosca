@@ -33,18 +33,12 @@ module Mosca
     end
 
     def get params = {}
-      response = {}
+      response = nil
       connection(params) do |c|
         topic = params[:topic_in] || params[:topic] || @topic_in || Exceptions.raise_missing_topic
-        timeout = params[:timeout] || self.class.default_timeout
-        begin
-          Timeout.timeout(timeout) do
-            c.get(topic_base + topic) do |topic, message|
-              response = parse_response message
-              break
-            end
-          end
-        rescue
+        c.get(topic_base + topic) do |topic, message|
+          response = parse_response message
+          break
         end
       end
       response
@@ -74,8 +68,14 @@ module Mosca
         if params[:connection]
           yield params[:connection]
         else
-          @client.connect(client_options) do |c|
-            yield c
+          timeout = params[:timeout] || self.class.default_timeout
+          begin
+            Timeout.timeout(timeout) do
+              @client.connect(client_options) do |c|
+                yield c
+              end
+            end
+          rescue Timeout::Error
           end
         end
       end

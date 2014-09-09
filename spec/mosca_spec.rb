@@ -115,18 +115,14 @@ describe Mosca::Client do
       mosca.get
     end
 
-    it "takes the connection time in count" do
-      Mosca::Client.default_timeout = 1
-      allow(client).to receive(:connect) do
-        sleep 2
-        self
+    context "time runs out" do
+      before do
+        expect(Timeout).to receive(:timeout).and_raise Timeout::Error
       end
-      expect(mosca.get).to be nil
-    end
 
-    it "returns nil when timed out" do
-      expect(Timeout).to receive(:timeout).and_raise Timeout::Error
-      expect(mosca.get).to be nil
+      it "get returns nil" do
+        expect(mosca.get).to be nil
+      end
     end
   end
 end
