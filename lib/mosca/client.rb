@@ -1,5 +1,6 @@
 require 'mqtt'
 require 'json'
+require 'mosca/exceptions'
 
 module Mosca
 
@@ -19,7 +20,7 @@ module Mosca
 
     def publish json, params = {}
       connection do |c|
-        topic_out = params[:topic_out] || @topic_out
+        topic_out = params[:topic_out] || params[:topic] || @topic_out || Exceptions.raise_missing_topic
         topic_in = params[:topic_in] || @topic_in
         c.subscribe full_topic(topic_in) if params[:response]
         c.publish full_topic(topic_out), json
@@ -30,7 +31,7 @@ module Mosca
     def get params = {}
       response = {}
       connection(params) do |c|
-        topic = params[:topic_in] || @topic_in
+        topic = params[:topic_in] || params[:topic] || @topic_in || Exceptions.raise_missing_topic
         timeout = params[:timeout] || @@default_timeout
         begin
           Timeout.timeout(timeout) do
