@@ -25,7 +25,6 @@ describe Mosca do
   end
 
   describe "publishing" do
-
     it "uses topic_out to publish if it was specified, and publishes the desired message" do
       expect(client).to receive(:publish).with(OUT,MESSAGE)
       mosca.publish MESSAGE
@@ -41,11 +40,9 @@ describe Mosca do
       expect(client).to receive(:connect).once.and_yield(client)
       expect(mosca.publish(MESSAGE, response: true)).to eq("response")
     end
-
   end
 
   describe "subscribing" do
-
     it "uses topic_in to get messages if it was specified" do
       expect(client).to receive(:get).with(IN)
       mosca.get
@@ -60,11 +57,9 @@ describe Mosca do
     it "will receive the message with get" do
       expect(mosca.get).to eq("response")
     end
-
   end
 
   describe "parsing the incoming messages" do
-
     it "gets a hash if the message was a JSON object" do
       expect(mosca.get topic_in: "json_in_topic").to be_a Hash
     end
@@ -79,7 +74,6 @@ describe Mosca do
   end
 
   describe "formatting the topic names" do
-
     before do
       mosca.topic_base = "/base/"
     end
@@ -90,6 +84,19 @@ describe Mosca do
       mosca.get
       mosca.publish MESSAGE
     end
+  end
 
+  describe "Exceptions raising" do
+    describe "raises MissingTopic" do
+      it "when publishing without topic" do
+        mosca.topic_out = nil
+        expect { mosca.publish "hi" }.to raise_error Mosca::Exceptions::MissingTopic
+      end
+
+      it "when getting without topic" do
+        mosca.topic_in = nil
+        expect { mosca.get }.to raise_error Mosca::Exceptions::MissingTopic
+      end
+    end
   end
 end
