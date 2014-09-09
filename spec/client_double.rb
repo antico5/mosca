@@ -2,7 +2,7 @@ class ClientDouble
   attr_accessor :connected
   def connect *args
     connected = true
-    yield self
+    self
   end
 
   def connected?

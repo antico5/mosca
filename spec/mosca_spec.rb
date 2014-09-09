@@ -37,7 +37,7 @@ describe Mosca::Client do
     end
 
     it "should wait for a response on topic_in if it's specified" do
-      expect(client).to receive(:connect).once.and_yield(client)
+      expect(client).to receive(:connect).once.and_call_original
       expect(mosca.publish(MESSAGE, response: true)).to eq("response")
     end
   end
