@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Mosca do
+describe Mosca::Client do
   OUT = "out_topic"
   IN = "in_topic"
   MESSAGE = "test_message"
@@ -97,6 +97,36 @@ describe Mosca do
         mosca.topic_in = nil
         expect { mosca.get }.to raise_error Mosca::Exceptions::MissingTopic
       end
+    end
+  end
+
+  describe "Timeout" do
+    it "has a default timeout of 5 seconds" do
+      expect(Mosca::Client.default_timeout).to eq(5)
+    end
+
+    it "can set a default timeout" do
+      described_class.default_timeout = 1
+      expect(described_class.default_timeout).to eq 1
+    end
+
+    it "calls timeout when getting a message" do
+      expect(Timeout).to receive(:timeout)
+      mosca.get
+    end
+
+    it "takes the connection time in count" do
+      Mosca::Client.default_timeout = 1
+      allow(client).to receive(:connect) do
+        sleep 2
+        self
+      end
+      expect(mosca.get).to be nil
+    end
+
+    it "returns nil when timed out" do
+      expect(Timeout).to receive(:timeout).and_raise Timeout::Error
+      expect(mosca.get).to be nil
     end
   end
 end
