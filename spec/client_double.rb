@@ -1,6 +1,12 @@
 class ClientDouble
+  attr_accessor :connected
   def connect *args
+    connected = true
     yield self
+  end
+
+  def connected?
+    !! connected
   end
 
   def method_missing *args

@@ -23,25 +23,26 @@ module Mosca
     end
 
     def publish json, params = {}
-      connection do |c|
-        topic_out = params[:topic_out] || params[:topic] || @topic_out || Exceptions.raise_missing_topic
-        topic_in = params[:topic_in] || @topic_in
-        c.subscribe full_topic(topic_in) if params[:response]
-        c.publish full_topic(topic_out), json
-        get params.merge({connection: c}) if params[:response]
+      topic_out = params[:topic_out] || params[:topic] || @topic_out || Exceptions.raise_missing_topic
+      topic_in = params[:topic_in] || @topic_in
+      connection.subscribe full_topic(topic_in) if params[:response]
+      connection.publish full_topic(topic_out), json
+      get(params) if params[:response]
+    end
+
+    def get! params = {}
+      timeout(params) do
+        topic = params[:topic_in] || params[:topic] || @topic_in || Exceptions.raise_missing_topic
+        connection.get(full_topic topic) do |topic, message|
+          return parse_response message
+        end
       end
     end
 
     def get params = {}
-      response = nil
-      connection(params) do |c|
-        topic = params[:topic_in] || params[:topic] || @topic_in || Exceptions.raise_missing_topic
-        c.get(topic_base + topic) do |topic, message|
-          response = parse_response message
-          break
-        end
-      end
-      response
+      get! params
+    rescue Timeout::Error
+      nil
     end
 
     def full_topic topic_name
@@ -64,18 +65,12 @@ module Mosca
         {remote_host: @broker, username: @user, password: @pass}
       end
 
-      def connection params = {}
-        if params[:connection]
-          yield params[:connection]
+      def connection
+        if @connection and @connection.connected?
+          @connection
         else
-          timeout = params[:timeout] || self.class.default_timeout
-          begin
-            Timeout.timeout(timeout) do
-              @client.connect(client_options) do |c|
-                yield c
-              end
-            end
-          rescue Timeout::Error
+          @connection ||= @client.connect(client_options) do |c|
+            c
           end
         end
       end
@@ -86,5 +81,11 @@ module Mosca
           response
       end
 
+      def timeout params
+        timeout = params[:timeout] || self.class.default_timeout
+        Timeout.timeout(timeout) do
+          yield
+        end
+      end
   end
 end
