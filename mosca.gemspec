@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ["lib"]
 
-  s.add_dependency 'mqtt', '~> 0.2.0'
+  s.add_dependency 'mqtt', '~> 0.3.0'
   s.add_dependency 'json', '~> 1.8.1'
 
   s.add_development_dependency 'bundler'
