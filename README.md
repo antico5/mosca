@@ -30,14 +30,14 @@ Or install it yourself as:
 You can configure the default timeout for response, and default mqtt broker.
 
 ```ruby
-  Mosca.default_timeout = 10 # 10 seconds
-  Mosca.default_broker = "test.mosquitto.org"
+  Mosca::Client.default_timeout = 10 # 10 seconds
+  Mosca::Client.default_broker = "test.mosquitto.org"
 ```
 
 ### New instance
 
 ```ruby
-  client = Mosca.new user: "username", pass: "password", topic_in: "/device/readings", topic_out: "/device/commands"
+  client = Mosca::Client.new user: "username", pass: "password", topic_in: "readings", topic_out: "commands", topic_base: "/device/"
 ```
 
 ### Publishing
@@ -51,21 +51,21 @@ You can configure the default timeout for response, and default mqtt broker.
 #### Message with response
 
 ```ruby
-  response = client.publish "some_command", response: true, topic_in: "/device/responses" # will publish and wait for a response on the /responses topic
+  response = client.publish "some_command", response: true, topic_in: "responses" # will publish and wait for a response on the /device/responses topic
   
 ```
 
 ### Getting messages
 
 ```ruby
-  puts client.get # will wait up to Mosca.default_timeout (default 5) seconds. will return {} if no response comes.
+  puts client.get # will wait up to Mosca.default_timeout (default 5) seconds. will return if no response comes.
   
   puts client.get timeout: 2, topic_in: "another_topic" # will wait up to 2 seconds for a response on the another_topic topic.
 ```
 
 ###TO DO
 
-Readme not ready yet
+Readme not complete yet
 
 ## Contributing
 
