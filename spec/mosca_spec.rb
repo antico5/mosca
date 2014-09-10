@@ -125,4 +125,27 @@ describe Mosca::Client do
       end
     end
   end
+
+  describe "Environment variables" do
+    it "can set MOSCA_BROKER" do
+      ENV["MOSCA_BROKER"] = "broker"
+      expect(described_class.new.broker).to eq "broker"
+    end
+
+    it "can set MOSCA_USER" do
+      ENV["MOSCA_USER"] = "USER"
+      expect(described_class.new.user).to eq "USER"
+    end
+
+    it "can set MOSCA_PASS" do
+      ENV["MOSCA_PASS"] = "PASS"
+      expect(described_class.new.pass).to eq "PASS"
+    end
+
+    it "can set MOSCA_TIMEOUT" do
+      ENV["MOSCA_TIMEOUT"] = "3"
+      expect(Timeout).to receive(:timeout).with 3
+      mosca.get
+    end
+  end
 end

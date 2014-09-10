@@ -3,23 +3,24 @@ require 'json'
 require 'mosca/exceptions'
 
 module Mosca
-
   class Client
-
     class << self
       attr_accessor :default_broker, :default_timeout
     end
 
     self.default_broker = ENV["MOSCA_BROKER"] || "test.mosquitto.org"
-    self.default_timeout = 5
+    self.default_timeout = 5 || ENV["MOSCA_TIMEOUT"]
 
     attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base, :client
 
     def initialize args = {}
-      options = default.merge(args)
-      attributes.each do |attribute|
-        send "#{attribute}=".to_sym, options[attribute]
-      end
+      @user = args[:user] || ENV["MOSCA_USER"]
+      @pass = args[:user] || ENV["MOSCA_PASS"]
+      @topic_in = args[:topic_in]
+      @topic_out = args[:topic_out]
+      @topic_base = args[:topic_base] || ""
+      @broker = args[:broker] || ENV["MOSCA_BROKER"] || self.class.default_broker
+      @client = args[:client] || MQTT::Client
     end
 
     def publish json, params = {}
@@ -51,16 +52,6 @@ module Mosca
 
     private
 
-      def default
-        { topic_base: "",
-          broker: self.class.default_broker,
-          client: MQTT::Client }
-      end
-
-      def attributes
-        [:user, :pass, :topic_in, :topic_out, :topic_base, :broker, :client]
-      end
-
       def client_options
         {remote_host: @broker, username: @user, password: @pass}
       end
@@ -80,7 +71,7 @@ module Mosca
       end
 
       def timeout params
-        timeout = params[:timeout] || self.class.default_timeout
+        timeout = params[:timeout] || ENV["MOSCA_TIMEOUT"].to_i || self.class.default_timeout
         Timeout.timeout(timeout) do
           yield
         end
