@@ -1,8 +1,4 @@
-[![Version     ](https://img.shields.io/gem/v/mosca.svg)](https://rubygems.org/gems/mosca)
-[![Dependency Status](https://gemnasium.com/ionia-corporation/mosca.svg)](https://gemnasium.com/ionia-corporation/mosca)
-[![Code Climate](https://codeclimate.com/github/ionia-corporation/mosca.png)](https://codeclimate.com/github/ionia-corporation/mosca)
-[![Build Status](https://img.shields.io/travis/ionia-corporation/mosca/master.svg)](https://travis-ci.org/ionia-corporation/mosca)
-[![Coverage    ](https://img.shields.io/codeclimate/coverage/github/ionia-corporation/mosca.svg)](https://codeclimate.com/github/ionia-corporation/mosca)
+[![Version     ](https://img.shields.io/gem/v/mosca.svg)](https://rubygems.org/gems/mosca) [![Dependency Status](https://gemnasium.com/ionia-corporation/mosca.svg)](https://gemnasium.com/ionia-corporation/mosca) [![Code Climate](https://codeclimate.com/github/ionia-corporation/mosca.png)](https://codeclimate.com/github/ionia-corporation/mosca) [![Build Status](https://img.shields.io/travis/ionia-corporation/mosca/master.svg)](https://travis-ci.org/ionia-corporation/mosca) [![Coverage    ](https://img.shields.io/codeclimate/coverage/github/ionia-corporation/mosca.svg)](https://codeclimate.com/github/ionia-corporation/mosca)
 
 
 # Mosca
@@ -22,7 +18,7 @@ And then execute:
 Or install it yourself as:
 
     $ gem install mosca
-    
+
 ## Usage
 
 ### Configure
@@ -33,6 +29,15 @@ You can configure the default timeout for response, and default mqtt broker.
   Mosca::Client.default_timeout = 10 # 10 seconds
   Mosca::Client.default_broker = "test.mosquitto.org"
 ```
+
+#### Environment variables
+
+The following environment variables are used when creating clients, so you can use something like dotenv to put them on a file:
+
+    MOSCA_BROKER
+    MOSCA_USER
+    MOSCA_PASS
+    MOSCA_TIMEOUT
 
 ### New instance
 
