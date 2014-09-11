@@ -50,7 +50,8 @@ The following environment variables are used when creating clients, so you can u
 #### Single message
 
 ```ruby
-  client.publish "restart" # will be sent to topic /device/commands
+  client.publish "restart" # will be sent to topic /device/commands. Returns nil if timed out.
+  client.publish! "restart" # Raises Timeout::Error if timed out.
 ```
 
 #### Message with response
@@ -63,9 +64,9 @@ The following environment variables are used when creating clients, so you can u
 ### Getting messages
 
 ```ruby
-  puts client.get # will wait up to Mosca.default_timeout (default 5) seconds. will return if no response comes.
-  
+  puts client.get # will wait up to Mosca.default_timeout (default 5) seconds. will return nil if no response comes.
   puts client.get timeout: 2, topic_in: "another_topic" # will wait up to 2 seconds for a response on the another_topic topic.
+  client.get! # Raises exception if timed out
 ```
 
 ###TO DO
