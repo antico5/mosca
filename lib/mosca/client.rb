@@ -23,12 +23,20 @@ module Mosca
       @client = args[:client] || MQTT::Client
     end
 
-    def publish json, params = {}
-      topic_out = params[:topic_out] || params[:topic] || @topic_out || Exceptions.raise_missing_topic
-      topic_in = params[:topic_in] || @topic_in
-      connection.subscribe full_topic(topic_in) if params[:response]
-      connection.publish full_topic(topic_out), json
-      get(params) if params[:response]
+    def publish! message, params = {}
+      timeout(params) do
+        topic_out = params[:topic_out] || params[:topic] || @topic_out || Exceptions.raise_missing_topic
+        topic_in = params[:topic_in] || @topic_in
+        connection.subscribe full_topic(topic_in) if params[:response]
+        connection.publish full_topic(topic_out), message
+        params[:response] ? get(params) : message
+      end
+    end
+
+    def publish message, params = {}
+      publish! message, params
+    rescue Timeout::Error
+      nil
     end
 
     def get! params = {}

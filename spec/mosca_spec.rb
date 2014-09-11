@@ -25,9 +25,9 @@ describe Mosca::Client do
   end
 
   describe "publishing" do
-    it "uses topic_out to publish if it was specified, and publishes the desired message" do
+    it "uses topic_out to publish if it was specified, publishes the desired message and returns the message when successfully published" do
       expect(client).to receive(:publish).with(OUT,MESSAGE)
-      mosca.publish MESSAGE
+      expect(mosca.publish MESSAGE).to eq MESSAGE
     end
 
     it "can take a topic_out as argument when publishing" do
@@ -122,6 +122,14 @@ describe Mosca::Client do
 
       it "get returns nil" do
         expect(mosca.get).to be nil
+      end
+
+      it "publish returns nil" do
+        expect(mosca.publish).to be nil
+      end
+
+      it "get! raises the timed out exception" do
+        expect(mosca.get!).to raise_error
       end
     end
   end
