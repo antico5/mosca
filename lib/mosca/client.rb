@@ -8,8 +8,8 @@ module Mosca
       attr_accessor :default_broker, :default_timeout
     end
 
-    self.default_broker = ENV["MOSCA_BROKER"] || "test.mosquitto.org"
-    self.default_timeout = 5 || ENV["MOSCA_TIMEOUT"]
+    self.default_broker  = ENV["MOSCA_BROKER"]  || "test.mosquitto.org"
+    self.default_timeout = ENV["MOSCA_TIMEOUT"] || 5
 
     attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base, :client
 
