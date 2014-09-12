@@ -125,11 +125,15 @@ describe Mosca::Client do
       end
 
       it "publish returns nil" do
-        expect(mosca.publish).to be nil
+        expect(mosca.publish 123).to be nil
       end
 
       it "get! raises the timed out exception" do
-        expect(mosca.get!).to raise_error
+        expect{ mosca.get! }.to raise_error Timeout::Error
+      end
+
+      it "publish! raises the timed out exception" do
+        expect{ mosca.publish! 123 }.to raise_error Timeout::Error
       end
     end
   end
