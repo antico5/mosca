@@ -42,6 +42,14 @@ The following environment variables are used when creating clients, so you can u
 ### New instance
 
 ```ruby
+  # Params (all optional)
+  # user
+  # pass
+  # broker
+  # topic_in
+  # topic_out
+  # topic_base (topics out and in are appended to this)
+
   client = Mosca::Client.new user: "username", pass: "password", topic_in: "readings", topic_out: "commands", topic_base: "/device/"
 ```
 
