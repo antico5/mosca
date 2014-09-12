@@ -58,6 +58,10 @@ module Mosca
       topic_base + topic_name
     end
 
+    def refresh_connection
+      connection
+    end
+
     private
 
       def client_options
