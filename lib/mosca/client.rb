@@ -69,7 +69,7 @@ module Mosca
       end
 
       def connection
-        if @connection && @connection.connected?
+        if connected?
           @connection
         else
           @connection = @client.connect(client_options)
@@ -87,6 +87,14 @@ module Mosca
         Timeout.timeout(timeout) do
           yield
         end
+      end
+
+      def connected?
+        @connection and @connection.connected? and is_alive?
+      end
+
+      def is_alive?
+        ( Time.now - client.last_ping_response ) < 30
       end
   end
 end
