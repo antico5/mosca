@@ -69,10 +69,10 @@ module Mosca
       end
 
       def connection
-        if @connection and @connection.connected?
+        if @connection && @connection.connected?
           @connection
         else
-          @connection ||= @client.connect(client_options)
+          @connection = @client.connect(client_options)
         end
       end
 
