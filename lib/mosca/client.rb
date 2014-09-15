@@ -94,7 +94,7 @@ module Mosca
       end
 
       def is_alive?
-        ( Time.now - client.last_ping_response ) < 30
+        ( Time.now - @connection.last_ping_response ) < 30
       end
   end
 end
