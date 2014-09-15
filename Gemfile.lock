@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mosca (0.0.6)
+    mosca (0.0.7)
       json (~> 1.8.1)
       mqtt (~> 0.3.0)
 
