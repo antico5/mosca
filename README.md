@@ -3,7 +3,11 @@
 
 # Mosca
 
-A simple client for mqtt communication
+A MQTT library wrapper for ruby. Currently uses ruby-mqtt for connection and packet handling.
+
+## Features
+
+- Automatically handles connection / reconnection when trying to get or publish messages. Good for background processes that deal with a high load of messages and need reliability and single connection handling.
 
 ## Installation
 
