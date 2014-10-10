@@ -8,6 +8,8 @@ A MQTT library wrapper for ruby. Currently uses ruby-mqtt for connection and pac
 ## Features
 
 - Automatically handles connection / reconnection when trying to get or publish messages. Good for background processes that deal with a high load of messages and need reliability and single connection handling.
+- Allows specifying timeout on all of the operations.
+- Simplifies 2-way communication by setting an out topic and an in topic to automatically wait for responses.
 
 ## Installation
 
