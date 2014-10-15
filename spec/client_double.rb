@@ -1,7 +1,7 @@
 class ClientDouble
   attr_accessor :connected
   def connect *args
-    connected = true
+    self.connected = true
     self
   end
 
