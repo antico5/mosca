@@ -1,9 +1,12 @@
 require 'mqtt'
 require 'json'
 require 'mosca/exceptions'
+require 'forwardable'
 
 module Mosca
   class Client
+    extend Forwardable
+
     class << self
       attr_accessor :default_broker, :default_timeout
     end
@@ -12,6 +15,7 @@ module Mosca
     self.default_timeout = ENV["MOSCA_TIMEOUT"] || 5
 
     attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base, :client
+    def_delegators :connection, :subscribe
 
     def initialize args = {}
       @user = args[:user] || ENV["MOSCA_USER"]

@@ -57,6 +57,12 @@ describe Mosca::Client do
     it "will receive the message with get" do
       expect(mosca.get).to eq("response")
     end
+
+    it "will delegate subscribe to the mqtt client" do
+      allow(mosca).to receive(:connection).and_return(client)
+      expect(client).to receive(:subscribe).with("queue")
+      mosca.subscribe "queue"
+    end
   end
 
   describe "parsing the incoming messages" do
