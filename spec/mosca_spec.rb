@@ -10,7 +10,9 @@ describe Mosca::Client do
   }
 
   let (:mosca) {
-    Mosca::Client.new topic_out: OUT, topic_in: IN, client: client
+    mosca = Mosca::Client.new topic_out: OUT, topic_in: IN, client: client
+    allow(mosca).to receive(:is_alive?).and_return true
+    mosca
   }
 
   it "has a default broker" do
