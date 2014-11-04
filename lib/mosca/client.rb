@@ -66,6 +66,10 @@ module Mosca
       connection
     end
 
+    def connected?
+      @connection and @connection.connected? and is_alive?
+    end
+
     private
 
       def client_options
@@ -91,10 +95,6 @@ module Mosca
         Timeout.timeout(timeout) do
           yield
         end
-      end
-
-      def connected?
-        @connection and @connection.connected? and is_alive?
       end
 
       def is_alive?
