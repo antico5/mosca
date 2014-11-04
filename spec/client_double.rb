@@ -9,6 +9,10 @@ class ClientDouble
     !! connected
   end
 
+  def last_ping_response
+    Time.now
+  end
+
   def method_missing *args
 
   end

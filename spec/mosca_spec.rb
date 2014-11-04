@@ -11,8 +11,6 @@ describe Mosca::Client do
 
   let (:mosca) {
     mosca = Mosca::Client.new topic_out: OUT, topic_in: IN, client: client
-    allow(mosca).to receive(:is_alive?).and_return true
-    mosca
   }
 
   it "has a default broker" do
@@ -144,6 +142,30 @@ describe Mosca::Client do
         expect{ mosca.publish! 123 }.to raise_error Timeout::Error
       end
     end
+  end
+
+  describe "#connected?" do
+    it "is false when not connected" do
+      expect( mosca.connected? ).to be_falsey
+    end
+
+    context "previously establishing the connection" do
+      before do
+        mosca.refresh_connection
+      end
+
+      it "is true" do
+        mosca.refresh_connection
+        expect( mosca.connected? ).to be_truthy
+      end
+
+      it "is false when not alive (no ping response)" do
+        expect( client ).to receive( :last_ping_response ).and_return( Time.now - 30 )
+        expect( mosca.connected? ).to be_falsey
+      end
+
+    end
+
   end
 
   describe "Environment variables" do
