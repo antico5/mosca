@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    mosca (0.0.7)
+    mosca (0.0.8)
       json (~> 1.8.1)
-      mqtt (~> 0.3.0)
+      mqtt (~> 0.3.1)
 
 GEM
   remote: https://rubygems.org/
@@ -15,7 +15,7 @@ GEM
     docile (1.1.5)
     json (1.8.1)
     method_source (0.8.2)
-    mqtt (0.3.0)
+    mqtt (0.3.1)
     multi_json (1.10.1)
     pry (0.10.1)
       coderay (~> 1.1.0)
