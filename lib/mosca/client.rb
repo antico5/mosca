@@ -7,6 +7,9 @@ module Mosca
   class Client
     extend Forwardable
 
+    DEFAULT_KEEP_ALIVE = 10
+    KEEP_ALIVE_MARGIN = 5
+
     class << self
       attr_accessor :default_broker, :default_timeout
     end
@@ -25,6 +28,7 @@ module Mosca
       @topic_base = args[:topic_base] || ""
       @broker = args[:broker] || ENV["MOSCA_BROKER"] || self.class.default_broker
       @client = args[:client] || MQTT::Client
+      @keep_alive = args[:keep_alive] || DEFAULT_KEEP_ALIVE
     end
 
     def publish! message, params = {}
@@ -81,6 +85,8 @@ module Mosca
           @connection
         else
           @connection = @client.connect(client_options)
+          @connection.keep_alive = @keep_alive
+          @connection
         end
       end
 
@@ -98,7 +104,7 @@ module Mosca
       end
 
       def is_alive?
-        ( Time.now - @connection.last_ping_response ) < 30
+        ( Time.now - @connection.last_ping_response ) < @keep_alive + KEEP_ALIVE_MARGIN
       end
   end
 end

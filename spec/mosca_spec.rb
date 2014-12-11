@@ -4,13 +4,14 @@ describe Mosca::Client do
   OUT = "out_topic"
   IN = "in_topic"
   MESSAGE = "test_message"
+  KEEP_ALIVE = 5
 
   let (:client) {
     ClientDouble.new
   }
 
   let (:mosca) {
-    mosca = Mosca::Client.new topic_out: OUT, topic_in: IN, client: client
+    mosca = Mosca::Client.new topic_out: OUT, topic_in: IN, client: client, keep_alive: KEEP_ALIVE
   }
 
   it "has a default broker" do
@@ -160,7 +161,7 @@ describe Mosca::Client do
       end
 
       it "is false when not alive (no ping response)" do
-        expect( client ).to receive( :last_ping_response ).and_return( Time.now - 30 )
+        allow( client ).to receive( :last_ping_response ).and_return( Time.now - ( KEEP_ALIVE + 5 ) )
         expect( mosca.connected? ).to be_falsey
       end
 
