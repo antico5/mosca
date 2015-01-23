@@ -11,7 +11,7 @@ describe Mosca::Client do
   }
 
   let (:mosca) {
-    mosca = Mosca::Client.new topic_out: OUT, topic_in: IN, client: client, keep_alive: KEEP_ALIVE
+    mosca = Mosca::Client.new topic_out: OUT, topic_in: IN, client: client, keep_alive: KEEP_ALIVE, port: "port"
   }
 
   it "has a default broker" do
@@ -38,7 +38,8 @@ describe Mosca::Client do
     end
 
     it "should wait for a response on topic_in if it's specified" do
-      expect(client).to receive(:connect).once.and_call_original
+      expect(client).to receive(:connect).with(hash_including(remote_port: "port"))
+        .once.and_call_original
       expect(mosca.publish(MESSAGE, response: true)).to eq("response")
     end
   end
@@ -109,12 +110,12 @@ describe Mosca::Client do
 
   describe "Timeout" do
     it "has a default timeout of 5 seconds" do
-      expect(Mosca::Client.default_timeout).to eq(5)
+      expect(described_class.new.time_out).to eq(5)
     end
 
     it "can set a default timeout" do
       described_class.default_timeout = 1
-      expect(described_class.default_timeout).to eq 1
+      expect(described_class.new.time_out).to eq 1
     end
 
     it "calls timeout when getting a message" do
