@@ -7,28 +7,33 @@ module Mosca
   class Client
     extend Forwardable
 
-    DEFAULT_KEEP_ALIVE = 10
     KEEP_ALIVE_MARGIN = 5
 
+    # class attributes
     class << self
       attr_accessor :default_broker, :default_timeout
     end
 
-    self.default_broker  = ENV["MOSCA_BROKER"]  || "test.mosquitto.org"
-    self.default_timeout = ENV["MOSCA_TIMEOUT"] || 5
+    attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base,
+      :client, :keep_alive, :port, :time_out
 
-    attr_accessor :user, :pass, :topic_in, :topic_out, :broker, :topic_base, :client
     def_delegators :connection, :subscribe
 
     def initialize args = {}
-      @user = args[:user] || ENV["MOSCA_USER"]
-      @pass = args[:user] || ENV["MOSCA_PASS"]
-      @topic_in = args[:topic_in]
-      @topic_out = args[:topic_out]
-      @topic_base = args[:topic_base] || ""
-      @broker = args[:broker] || ENV["MOSCA_BROKER"] || self.class.default_broker
-      @client = args[:client] || MQTT::Client
-      @keep_alive = args[:keep_alive] || DEFAULT_KEEP_ALIVE
+      default_attributes.merge(args).each do |k,v|
+        self.send("#{k}=", v)
+      end
+    end
+
+    def default_attributes
+      { user: ENV["MOSCA_USER"],
+        pass: ENV["MOSCA_PASS"],
+        topic_base: "",
+        broker: ENV["MOSCA_BROKER"] || self.class.default_broker || "test.mosquitto.org",
+        client: MQTT::Client,
+        keep_alive: 10,
+        time_out: (ENV["MOSCA_TIMEOUT"] || self.class.default_timeout || 5).to_i
+      }
     end
 
     def publish! message, params = {}
@@ -96,9 +101,9 @@ module Mosca
           response
       end
 
-      def timeout params
-        timeout = params[:timeout] || ENV["MOSCA_TIMEOUT"].to_i || self.class.default_timeout
-        Timeout.timeout(timeout) do
+      def timeout params, &b
+        seconds = params[:timeout] || time_out
+        Timeout.timeout(seconds) do
           yield
         end
       end
