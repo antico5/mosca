@@ -82,7 +82,7 @@ module Mosca
     private
 
       def client_options
-        {remote_host: @broker, username: @user, password: @pass}
+        {remote_host: @broker, remote_port: @port, username: @user, password: @pass}
       end
 
       def connection
