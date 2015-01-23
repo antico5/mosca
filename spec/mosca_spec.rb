@@ -191,5 +191,10 @@ describe Mosca::Client do
       expect(Timeout).to receive(:timeout).with 3
       mosca.get
     end
+
+    it "can set MOSCA_PORT" do
+      ENV["MOSCA_PORT"] = "1900"
+      expect(described_class.new.port).to eq(1900)
+    end
   end
 end

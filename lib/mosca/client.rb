@@ -32,7 +32,8 @@ module Mosca
         broker: ENV["MOSCA_BROKER"] || self.class.default_broker || "test.mosquitto.org",
         client: MQTT::Client,
         keep_alive: 10,
-        time_out: (ENV["MOSCA_TIMEOUT"] || self.class.default_timeout || 5).to_i
+        time_out: (ENV["MOSCA_TIMEOUT"] || self.class.default_timeout || 5).to_i,
+        port: ENV["MOSCA_PORT"].to_i || 1883
       }
     end
 
